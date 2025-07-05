@@ -34,6 +34,8 @@ class DB:
         """
         # Write to database
         logger.info("Creating Task in DB")
+        if task.validation_error is not None:
+            task.status = TaskStatus.ERROR
         session.add(task)
         session.commit()
 
@@ -107,6 +109,7 @@ class DB:
             if task_status:
                 result.status = task_status
             if validation_error:
+                result.status = TaskStatus.ERROR
                 result.validation_error = validation_error
 
             updated_at = datetime.now(timezone.utc)
