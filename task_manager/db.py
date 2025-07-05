@@ -79,7 +79,7 @@ class DB:
     def update_task(
         self,
         session: Session,
-        task_id: str,
+        task_id: int,
         task_status: TaskStatus = None,
         validation_error: str = None,
     ) -> None:

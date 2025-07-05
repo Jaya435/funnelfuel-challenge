@@ -26,7 +26,7 @@ def create_task(payload: schemas.TaskBaseSchema):
     except IntegrityError as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="A user with the given details already exists.",
+            detail="A task with the given details already exists.",
         ) from e
     except Exception as e:
         logger.error(e)
@@ -53,4 +53,35 @@ def get_task(task_id: int):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred while fetching the task.",
+        ) from e
+
+@router.patch("/{task_id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.TaskResponse)
+def update_task(task_id: int, payload: schemas.TaskBaseSchema):
+    db = DB()
+    session = Session(db.engine)
+    try:
+        task = db.read_task(task_id, session)
+        update_data = payload.model_dump(exclude_unset=True)
+        db.update_task(
+            session,
+            task_id,
+            task_status=update_data.get('status'),
+            validation_error=update_data.get('validation_error')
+        )
+        return schemas.TaskResponse(task=schemas.TaskBaseSchema.model_validate(task))
+    except TaskNotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=e
+        )
+    except IntegrityError as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="A task with the given details already exists.",
+        ) from e
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while creating the task.",
         ) from e

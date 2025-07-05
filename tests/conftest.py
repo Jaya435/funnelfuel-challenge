@@ -91,5 +91,6 @@ def task_payload_updated():
     """Generate a task payload."""
     return {
         "id": 2,
+        "status": TaskStatus.NOT_STARTED,
         "validation_error": "Invalid IP range: 192.168.1.256",
     }

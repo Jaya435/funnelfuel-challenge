@@ -8,7 +8,7 @@ def test_root(db_instance_empty, test_client):
     assert response.status_code == 200
     assert response.json() == {"message": "The API is up."}
 
-def test_create_get__task(test_client, create_task_payload):
+def test_create_get__task(db_instance_empty, test_client, create_task_payload):
     response = test_client.post("/api/tasks/", json=create_task_payload)
     assert response.status_code == 201
 
@@ -19,7 +19,7 @@ def test_create_get__task(test_client, create_task_payload):
     assert response_json["task"]["id"] == create_task_payload["id"]
     assert response_json["task"]["status"] == TaskStatus.NOT_STARTED
 
-def test_create_update_task(test_client, create_task_payload, task_payload_updated):
+def test_create_update_task(db_instance_empty, test_client, create_task_payload, task_payload_updated):
     response = test_client.post("/api/tasks/", json=create_task_payload)
     assert response.status_code == 201
 
@@ -28,7 +28,7 @@ def test_create_update_task(test_client, create_task_payload, task_payload_updat
         1
     )  # Sleep for 1 second to ensure updatedAt is different (datetime precision is low in SQLite)
     response = test_client.patch(
-        f"/api/users/{create_task_payload['id']}", json=task_payload_updated
+        f"/api/tasks/{create_task_payload['id']}", json=task_payload_updated
     )
     response_json = response.json()
     assert response.status_code == 202
