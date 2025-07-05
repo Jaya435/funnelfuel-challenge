@@ -12,8 +12,6 @@ def test_create_and_read_task(db_instance_empty, session, task1):
 
     # # Read Task from DB
     task = db_instance_empty.read_task(task_id=1, session=session)
-    assert task.title == task1.title
-    assert task.description == task1.description
     assert task.status == task1.status
 
 
@@ -28,8 +26,8 @@ def test_read_all_tasks(db_instance_empty, session, task1, task2):
     # Read all Tasks from DB
     tasks = db_instance_empty.read_tasks(session=session)
     assert len(tasks) == 2
-    assert tasks[0].title == task1.title
-    assert tasks[1].title == task2.title
+    assert tasks[0].status == task1.status
+    assert tasks[1].status == task2.status
 
 
 def test_read_all_tasks_empty(db_instance_empty, session):
@@ -85,7 +83,6 @@ def test_update_task(db_instance_empty, session, task1):
         session=session,
         task_id=1,
         task_status=TaskStatus.COMPLETED,
-        task_title="Wash The Car",  # Change from "Go to the Gym" to "Wash The Car"
     )
 
     # Read Task from DB
@@ -93,11 +90,7 @@ def test_update_task(db_instance_empty, session, task1):
 
     # Check Task Status and Updated At
     assert task.status == TaskStatus.COMPLETED
-    assert task.title == "Wash The Car"
     assert task.updated_at > task.created_at
-
-    # Check that the description has not changed
-    assert task.description == task1.description
 
 
 def test_update_task_updated_at(db_instance_empty, session, task1):
@@ -111,7 +104,6 @@ def test_update_task_updated_at(db_instance_empty, session, task1):
     db_instance_empty.update_task(
         session=session,
         task_id=1,
-        task_title="New Title",
     )
 
     # Read Task from DB

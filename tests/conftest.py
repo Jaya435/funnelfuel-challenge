@@ -10,8 +10,6 @@ def task1():
     Create a Task 1
     """
     task1 = Tasks(
-        title="Go to the Gym",
-        description="Visit Gym at 09:00",
         status=TaskStatus.NOT_STARTED,
     )
     yield task1
@@ -23,8 +21,6 @@ def task2():
     Create a Task 2
     """
     task2 = Tasks(
-        title="Buy Groceries",
-        description="Large shopping list - buy at 12:00",
         status=TaskStatus.NOT_STARTED,
     )
     yield task2
