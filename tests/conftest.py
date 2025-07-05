@@ -79,11 +79,17 @@ def db_instance_empty(db_instance, session):
     # Clear DB after test function
     db_instance.delete_all_tasks(session=session)
 
-# Fixture to generate a user payload
 @pytest.fixture()
 def create_task_payload():
     """Generate a task payload."""
     return {
         "id": 1,
         "status": TaskStatus.NOT_STARTED,
+    }
+@pytest.fixture()
+def task_payload_updated():
+    """Generate a task payload."""
+    return {
+        "id": 2,
+        "validation_error": "Invalid IP range: 192.168.1.256",
     }
