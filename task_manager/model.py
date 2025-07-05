@@ -22,7 +22,7 @@ class Tasks(SQLModel, table=True):
         sa_column_kwargs={"default": TaskStatus.NOT_STARTED},
         description="The status of the task",
     )
-    validation_error: Optional[str] = Field(
+    validation_error: str | None = Field(
         default=None, description="Validation errors returned from third party APIs"
     )
     created_at: datetime = Field(
