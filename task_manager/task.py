@@ -46,7 +46,7 @@ def get_task(task_id: int):
     except TaskNotFoundError as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=e
+            detail=str(e)
         )
     except Exception as e:
         logger.error(e)
@@ -72,7 +72,7 @@ def update_task(task_id: int, payload: schemas.TaskBaseSchema):
     except TaskNotFoundError as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=e
+            detail=str(e)
         )
     except IntegrityError as e:
         raise HTTPException(

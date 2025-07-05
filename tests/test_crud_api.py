@@ -39,3 +39,40 @@ def test_create_update_task(db_instance_empty, test_client, create_task_payload,
         response_json["task"]["updated_at"] is not None
         and response_json["task"]["updated_at"] > response_json["task"]["created_at"]
     )
+
+def test_get_task_not_found(test_client):
+    response = test_client.get(f"/api/tasks/{9999}")
+    assert response.status_code == 404
+    response_json = response.json()
+    assert response_json["detail"] == f"Task with ID {9999} not found"
+
+
+def test_create_task_wrong_payload(test_client):
+    response = test_client.post("/api/tasks/", json={})
+    assert response.status_code == 422
+
+
+def test_update_task_wrong_payload(test_client, task_payload_updated):
+    task_payload_updated["validation_error"] = (
+        True  # validation_error should be a string not a boolean
+    )
+    response = test_client.patch(f"/api/tasks/{2}", json=task_payload_updated)
+    assert response.status_code == 422
+    response_json = response.json()
+    assert response_json == {
+        "detail": [
+            {
+                "type": "string_type",
+                "loc": ["body", "validation_error"],
+                "msg": "Input should be a valid string",
+                "input": True,
+            }
+        ]
+    }
+
+
+def test_update_user_doesnt_exist(test_client, task_payload_updated):
+    response = test_client.patch(f"/api/tasks/3", json=task_payload_updated)
+    assert response.status_code == 404
+    response_json = response.json()
+    assert response_json["detail"] == f"Task with ID {3} not found"
