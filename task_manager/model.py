@@ -21,7 +21,9 @@ class Tasks(SQLModel, table=True):
         sa_column_kwargs={"default": TaskStatus.NOT_STARTED},
         description="The status of the task",
     )
-    validationError: Optional[str] = Field(default=None, description="Validation errors returned from third party APIs")
+    validation_error: Optional[str] = Field(
+        default=None, description="Validation errors returned from third party APIs"
+    )
     created_at: datetime = Field(
         default=datetime.now(timezone.utc),
         nullable=False,
