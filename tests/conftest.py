@@ -1,7 +1,9 @@
 import pytest
 from sqlmodel import Session
+from fastapi.testclient import TestClient
 from task_manager.db import DB
 from task_manager.model import Tasks, TaskStatus
+from task_manager.main import app
 
 
 @pytest.fixture
@@ -54,6 +56,19 @@ def session(db_instance, scope="session"):
     session = Session(db_instance.engine)
     yield session
     session.close()
+
+@pytest.fixture(scope="function")
+def test_client(session):
+    """Create a test client that uses the override_get_db fixture to return a session."""
+
+    # def override_get_db():
+    #     try:
+    #         yield session
+    #     finally:
+    #         session.close()
+
+    with TestClient(app) as test_client:
+        yield test_client
 
 
 @pytest.fixture
