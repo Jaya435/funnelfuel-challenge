@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 from sqlmodel import Session
 from fastapi.testclient import TestClient
@@ -39,8 +41,8 @@ def task3():
     yield task3
 
 
-@pytest.fixture
-def db_instance(scope="session"):
+@pytest.fixture(scope="session")
+def db_instance():
     """
     Create a DB Instance
     """
@@ -48,8 +50,8 @@ def db_instance(scope="session"):
     yield db
 
 
-@pytest.fixture
-def session(db_instance, scope="session"):
+@pytest.fixture(scope="session")
+def session(db_instance):
     """
     Create a Session, close after test session, uses `db_instance` fixture
     """
@@ -59,20 +61,14 @@ def session(db_instance, scope="session"):
 
 @pytest.fixture(scope="function")
 def test_client(session):
-    """Create a test client that uses the override_get_db fixture to return a session."""
-
-    # def override_get_db():
-    #     try:
-    #         yield session
-    #     finally:
-    #         session.close()
+    """Create a test client to return a session."""
 
     with TestClient(app) as test_client:
         yield test_client
 
 
-@pytest.fixture
-def db_instance_empty(db_instance, session, scope="function"):
+@pytest.fixture(scope="function")
+def db_instance_empty(db_instance, session):
     """
     Create an Empty DB Instance, uses `db_instance` and `session` fixtures
     """
@@ -82,3 +78,19 @@ def db_instance_empty(db_instance, session, scope="function"):
 
     # Clear DB after test function
     db_instance.delete_all_tasks(session=session)
+
+# Fixture to generate a random user id
+@pytest.fixture()
+def task_id() -> uuid.UUID:
+    """Generate a random user id."""
+    return str(uuid.uuid4())
+
+
+# Fixture to generate a user payload
+@pytest.fixture()
+def create_task_payload(task_id):
+    """Generate a task payload."""
+    return {
+        "id": task_id,
+        "status": TaskStatus.NOT_STARTED,
+    }
