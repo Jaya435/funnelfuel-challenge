@@ -18,4 +18,7 @@ class TaskBaseSchema(SQLModel):
         arbitrary_types_allowed = True
 
 class TaskResponse(SQLModel):
-    Task: TaskBaseSchema
+    task: TaskBaseSchema
+
+class GetTaskResponse(SQLModel):
+    task: TaskBaseSchema

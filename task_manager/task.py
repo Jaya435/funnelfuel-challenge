@@ -6,6 +6,7 @@ from sqlmodel import Session
 
 from task_manager import schemas, model
 from task_manager.db import DB
+from task_manager.exceptions import TaskNotFoundError
 from task_manager.logger import create_logger
 
 # Extract the filename without extension
@@ -23,20 +24,33 @@ def create_task(payload: schemas.TaskBaseSchema):
         new_task = model.Tasks(**payload.model_dump())
         db.create_task(new_task, session)
     except IntegrityError as e:
-        # Log the error or handle it as needed
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="A user with the given details already exists.",
         ) from e
     except Exception as e:
-        # Handle other types of database errors
         logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while creating the task.",
         ) from e
+    return schemas.TaskResponse(task=schemas.TaskBaseSchema.model_validate(new_task))
 
-    # Convert the SQLAlchemy model instance to a Pydantic model
-    task_schema = schemas.TaskBaseSchema.model_validate(new_task)
-    # Return the successful creation response
-    return schemas.TaskResponse(Task=task_schema)
+@router.get("/{task_id}", status_code=status.HTTP_200_OK, response_model=schemas.GetTaskResponse)
+def get_task(task_id: int):
+    db = DB()
+    session = Session(db.engine)
+    try:
+        task = db.read_task(task_id, session)
+        return schemas.GetTaskResponse(task=schemas.TaskBaseSchema.model_validate(task))
+    except TaskNotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=e
+        )
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred while fetching the task.",
+        ) from e
