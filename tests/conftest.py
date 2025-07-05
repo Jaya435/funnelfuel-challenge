@@ -79,18 +79,11 @@ def db_instance_empty(db_instance, session):
     # Clear DB after test function
     db_instance.delete_all_tasks(session=session)
 
-# Fixture to generate a random user id
-@pytest.fixture()
-def task_id() -> uuid.UUID:
-    """Generate a random user id."""
-    return str(uuid.uuid4())
-
-
 # Fixture to generate a user payload
 @pytest.fixture()
-def create_task_payload(task_id):
+def create_task_payload():
     """Generate a task payload."""
     return {
-        "id": task_id,
+        "id": 1,
         "status": TaskStatus.NOT_STARTED,
     }
