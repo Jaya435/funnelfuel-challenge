@@ -13,7 +13,6 @@ def test_create_get__task(test_client, create_task_payload):
     # Get the created user
     response = test_client.get(f"/api/tasks/{create_task_payload['id']}")
     response_json = response.json()
-    print(response_json)
     assert response.status_code == 200
     assert response_json["task"]["id"] == create_task_payload["id"]
     assert response_json["task"]["status"] == TaskStatus.NOT_STARTED
