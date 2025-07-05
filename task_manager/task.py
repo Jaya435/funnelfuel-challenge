@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import APIRouter, status, HTTPException
 from sqlmodel import Session
 
+from celery_tasks.tasks import create_campaign_task
 from task_manager import schemas, model
 from task_manager.db import DB
 from task_manager.exceptions import TaskNotFoundError
@@ -22,6 +23,8 @@ def create_task(payload: schemas.TaskBaseSchema):
     session = Session(db.engine)
     try:
         new_task = model.Tasks(**payload.model_dump())
+        celery_task = create_campaign_task()
+        new_task.id = celery_task.id
         db.create_task(new_task, session)
     except IntegrityError as e:
         raise HTTPException(
