@@ -13,6 +13,7 @@ def test_create_and_read_task(db_instance_empty, session, task1):
     # # Read Task from DB
     task = db_instance_empty.read_task(task_id=1, session=session)
     assert task.status == task1.status
+    assert task.validationError == task1.validationError
 
 
 def test_read_all_tasks(db_instance_empty, session, task1, task2):
