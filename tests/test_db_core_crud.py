@@ -106,15 +106,14 @@ def test_update_task_validation_error(db_instance_empty, session, task1):
     db_instance_empty.update_task(
         session=session,
         task_id=1,
-        task_status=TaskStatus.COMPLETED,
-        validation_error=validation_error
+        validation_error=validation_error,
     )
 
     # Read Task from DB
     task = db_instance_empty.read_task(task_id=1, session=session)
 
     # Check Task Status and Updated At
-    assert task.status == TaskStatus.COMPLETED
+    assert task.status == TaskStatus.ERROR
     assert task.updated_at > task.created_at
     assert task.validation_error == validation_error
 
