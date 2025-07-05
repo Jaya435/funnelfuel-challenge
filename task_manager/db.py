@@ -78,8 +78,6 @@ class DB:
         self,
         session: Session,
         task_id: str,
-        task_title: str = None,
-        task_description: str = None,
         task_status: TaskStatus = None,
     ) -> None:
         """
@@ -89,8 +87,6 @@ class DB:
 
             session (Session): The database session
             task_id (str): The ID of the task to update
-            task_title (str, optional): The title of the task. Defaults to None.
-            task_description (str, optional): The description of the task. Defaults to None.
             task_status (TaskStatus, optional): The status of the task. Defaults to None.
 
         Returns:
@@ -106,12 +102,6 @@ class DB:
 
         if result:
             # Update the task
-            if task_title:
-                result.title = task_title
-
-            if task_description:
-                result.description = task_description
-
             if task_status:
                 result.status = task_status
 

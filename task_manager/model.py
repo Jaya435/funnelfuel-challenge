@@ -17,8 +17,6 @@ class Tasks(SQLModel, table=True):
     id: Optional[int] = Field(
         default=None, primary_key=True, description="The ID of the task"
     )
-    title: str = Field(description="The title of the task")
-    description: Optional[str] = Field(description="The description of the task")
     status: TaskStatus = Field(
         sa_column_kwargs={"default": TaskStatus.NOT_STARTED},
         description="The status of the task",
