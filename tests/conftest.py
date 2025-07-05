@@ -25,6 +25,17 @@ def task2():
     )
     yield task2
 
+@pytest.fixture
+def task3():
+    """
+    Create a Task 3
+    """
+    task3 = Tasks(
+        status=TaskStatus.NOT_STARTED,
+        validation_error="Invalid IP range: 192.168.1.256"
+    )
+    yield task3
+
 
 @pytest.fixture
 def db_instance(scope="session"):

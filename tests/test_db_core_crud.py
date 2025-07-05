@@ -16,19 +16,33 @@ def test_create_and_read_task(db_instance_empty, session, task1):
     assert task.validation_error == task1.validation_error
 
 
-def test_read_all_tasks(db_instance_empty, session, task1, task2):
+def test_read_all_tasks(db_instance_empty, session, task1, task2, task3):
     """
     Test the reading of all tasks
     """
     # Write 2 Tasks to DB
     db_instance_empty.create_task(task=task1, session=session)
     db_instance_empty.create_task(task=task2, session=session)
+    db_instance_empty.create_task(task=task3, session=session)
 
     # Read all Tasks from DB
     tasks = db_instance_empty.read_tasks(session=session)
-    assert len(tasks) == 2
+    assert len(tasks) == 3
     assert tasks[0].status == task1.status
     assert tasks[1].status == task2.status
+    assert tasks[2].status == TaskStatus.ERROR
+
+def test_create_with_validation_error(db_instance_empty, session, task3):
+    """
+    Test the creation of a task with a validation error
+    """
+    # Write Task to DB
+    db_instance_empty.create_task(task=task3, session=session)
+
+    # # Read Task from DB
+    task = db_instance_empty.read_task(task_id=1, session=session)
+    assert task.status == TaskStatus.ERROR
+    assert task.validation_error == task3.validation_error
 
 
 def test_read_all_tasks_empty(db_instance_empty, session):
