@@ -79,6 +79,7 @@ class DB:
         session: Session,
         task_id: str,
         task_status: TaskStatus = None,
+        validation_error: str = None,
     ) -> None:
         """
         Update a task in the database
@@ -88,6 +89,7 @@ class DB:
             session (Session): The database session
             task_id (str): The ID of the task to update
             task_status (TaskStatus, optional): The status of the task. Defaults to None.
+            validation_error (str, optional): Validation errors returned from third party APIs. Defaults to None.
 
         Returns:
 
@@ -104,6 +106,8 @@ class DB:
             # Update the task
             if task_status:
                 result.status = task_status
+            if validation_error:
+                result.validation_error = validation_error
 
             updated_at = datetime.now(timezone.utc)
             result.updated_at = updated_at
