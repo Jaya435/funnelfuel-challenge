@@ -20,7 +20,7 @@ def test_read_all_tasks(db_instance_empty, session, task1, task2, task3):
     """
     Test the reading of all tasks
     """
-    # Write 2 Tasks to DB
+    # Write 3 Tasks to DB
     db_instance_empty.create_task(task=task1, session=session)
     db_instance_empty.create_task(task=task2, session=session)
     db_instance_empty.create_task(task=task3, session=session)

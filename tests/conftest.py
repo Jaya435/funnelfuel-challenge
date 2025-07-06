@@ -86,6 +86,7 @@ def create_task_payload():
         "id": 1,
         "status": TaskStatus.NOT_STARTED,
     }
+
 @pytest.fixture()
 def task_payload_updated():
     """Generate a task payload."""
