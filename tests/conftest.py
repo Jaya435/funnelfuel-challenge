@@ -29,6 +29,7 @@ def task2():
     )
     yield task2
 
+
 @pytest.fixture
 def task3():
     """
@@ -36,7 +37,7 @@ def task3():
     """
     task3 = Tasks(
         status=TaskStatus.NOT_STARTED,
-        validation_error="Invalid IP range: 192.168.1.256"
+        validation_error="Invalid IP range: 192.168.1.256",
     )
     yield task3
 
@@ -59,6 +60,7 @@ def session(db_instance):
     yield session
     session.close()
 
+
 @pytest.fixture(scope="function")
 def test_client(session):
     """Create a test client to return a session."""
@@ -79,6 +81,7 @@ def db_instance_empty(db_instance, session):
     # Clear DB after test function
     db_instance.delete_all_tasks(session=session)
 
+
 @pytest.fixture()
 def create_task_payload():
     """Generate a task payload."""
@@ -86,6 +89,7 @@ def create_task_payload():
         "id": 1,
         "status": TaskStatus.NOT_STARTED,
     }
+
 
 @pytest.fixture()
 def task_payload_updated():

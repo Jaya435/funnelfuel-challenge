@@ -17,8 +17,10 @@ class TaskBaseSchema(SQLModel):
         populate_by_name = True
         arbitrary_types_allowed = True
 
+
 class TaskResponse(SQLModel):
     task: TaskBaseSchema
+
 
 class GetTaskResponse(SQLModel):
     task: TaskBaseSchema

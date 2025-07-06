@@ -8,6 +8,7 @@ def test_root(db_instance_empty, test_client):
     assert response.status_code == 200
     assert response.json() == {"message": "The API is up."}
 
+
 def test_create_get__task(db_instance_empty, test_client, create_task_payload):
     response = test_client.post("/api/tasks/", json=create_task_payload)
     assert response.status_code == 201
@@ -19,7 +20,10 @@ def test_create_get__task(db_instance_empty, test_client, create_task_payload):
     assert response_json["task"]["id"] == create_task_payload["id"]
     assert response_json["task"]["status"] == TaskStatus.NOT_STARTED
 
-def test_create_update_task(db_instance_empty, test_client, create_task_payload, task_payload_updated):
+
+def test_create_update_task(
+    db_instance_empty, test_client, create_task_payload, task_payload_updated
+):
     response = test_client.post("/api/tasks/", json=create_task_payload)
     assert response.status_code == 201
 
@@ -34,11 +38,14 @@ def test_create_update_task(db_instance_empty, test_client, create_task_payload,
     assert response.status_code == 202
     assert response_json["task"]["id"] == create_task_payload["id"]
     assert response_json["task"]["status"] == TaskStatus.ERROR
-    assert response_json["task"]["validation_error"] == "Invalid IP range: 192.168.1.256"
+    assert (
+        response_json["task"]["validation_error"] == "Invalid IP range: 192.168.1.256"
+    )
     assert (
         response_json["task"]["updated_at"] is not None
         and response_json["task"]["updated_at"] > response_json["task"]["created_at"]
     )
+
 
 def test_get_task_not_found(test_client):
     response = test_client.get(f"/api/tasks/{9999}")

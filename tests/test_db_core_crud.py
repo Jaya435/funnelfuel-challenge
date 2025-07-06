@@ -32,6 +32,7 @@ def test_read_all_tasks(db_instance_empty, session, task1, task2, task3):
     assert tasks[1].status == task2.status
     assert tasks[2].status == TaskStatus.ERROR
 
+
 def test_create_with_validation_error(db_instance_empty, session, task3):
     """
     Test the creation of a task with a validation error
@@ -106,6 +107,7 @@ def test_update_task(db_instance_empty, session, task1):
     # Check Task Status and Updated At
     assert task.status == TaskStatus.COMPLETED
     assert task.updated_at > task.created_at
+
 
 def test_update_task_validation_error(db_instance_empty, session, task1):
     """
