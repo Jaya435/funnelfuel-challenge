@@ -9,7 +9,7 @@ def test_db_connection_timeout(mocker):
 
     # Test DB Connection
     with pytest.raises(TimeoutError):
-        db = DB()  #
+        DB()  #
 
 
 def test_session_failure(session, mocker, task1):

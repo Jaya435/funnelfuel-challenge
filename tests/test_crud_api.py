@@ -79,7 +79,7 @@ def test_update_task_wrong_payload(test_client, task_payload_updated):
 
 
 def test_update_user_doesnt_exist(test_client, task_payload_updated):
-    response = test_client.patch(f"/api/tasks/3", json=task_payload_updated)
+    response = test_client.patch("/api/tasks/3", json=task_payload_updated)
     assert response.status_code == 404
     response_json = response.json()
     assert response_json["detail"] == f"Task with ID {3} not found"

@@ -11,5 +11,5 @@ def test_matching_task(db_instance_empty, session, task1, task2, task3):
     tasks = db_instance_empty.read_tasks(session=session)
 
     assert matching_task(tasks, 2)
-    assert matching_task(tasks, 3) == False
-    assert matching_task(tasks, 1) == False
+    assert not matching_task(tasks, 3)
+    assert not matching_task(tasks, 1)
